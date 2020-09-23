@@ -5,9 +5,6 @@ from lxml import etree
 
 
 class Parser:
-    def __init__(self):
-        pass
-
     @staticmethod
     def list_files(root_path, extension):
         file_list = []
@@ -25,26 +22,35 @@ class Parser:
     def eval_var_multi_line(sec_type, lines):
         pass
 
-    def parse_c_file(self, file_path):
+    @staticmethod
+    def parse_c_file(file_path):
         variable_list = []
         if not os.path.exists(file_path):
             return
         fd = open(file_path, "r")
         for line in fd.readlines():
             if "START_SEC_VAR" in line:
-                is_cal_sec = "CAL" in line
-                section_open = True
+                section = []
                 continue
             if "STOP_SEC_VAR" in line:
-                section_open = False
+                Parser.exal_section(section,"CAL" in line)
                 continue
             if "#include" in line:
                 continue
-            if section_open:
-                if ";" in line and "volatile" in line:
-                    variable_list.append(self.eval_var_single_line(is_cal_sec, line))
+            section.append(line)
         fd.close()
         return variable_list
+
+    @staticmethod
+    def parse_all_c_files(base_path):
+        all_variables = []
+        for file_path in Parser.list_files(base_path,'.c'):
+            all_variables += Parser.parse_c_file(file_path)
+        return all_variables
+
+    @staticmethod
+    def extract_section(lines,is_cal):
+        pass
 
     @staticmethod
     def parse_map_file( file_path, cfg_to_update):
@@ -61,14 +67,3 @@ class Parser:
                     entry.address = int(match.group('address'), 16)
                     entry.byte_size = int(match.group('byte_size'), 16)
         fd.close()
-
-    def create_cfg(self,base_src_path,map_path, out_path):
-        cfg = []
-        for file in self.list_files(base_src_path,'.c'):
-            self.parse_c_file(file,cfg)
-        self.parse_map_file(map_path,cfg)
-        cfg_xml = etree.Element("Config")
-        cfg_xml.write(out_path if '.xml' in out_path else out_path+'.xml')
-
-    def update_cfg(self,map_path, out_path):
-        cfg = []
