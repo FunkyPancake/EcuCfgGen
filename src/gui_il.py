@@ -1,6 +1,9 @@
+from src.Parser import Parser
+from src.DataContainer import  A2LContainer
 from src.ui import main_ui
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from PyQt5.QtCore import QSettings
+
 
 
 class Gui(QMainWindow):
@@ -27,7 +30,7 @@ class Gui(QMainWindow):
             self.ui.baseLineEdit.setText(dname)
 
     def cfgToolButtonClicked(self):
-        [fname,extension] = (QFileDialog.getSaveFileName(self, 'Open file', '', "CFG files (*.ecucfg)"))
+        [fname,extension] = (QFileDialog.getOpenFileName(self, 'Open file', '', "A2L files (*.a2l)"))
         if fname:
             self.ui.cfgLineEdit.setText(fname)
 
@@ -37,7 +40,9 @@ class Gui(QMainWindow):
             self.ui.mapLineEdit.setText(fname)
 
     def updateButtonClicked(self):
-        pass
+        out_data = A2LContainer()
+        Parser.parse_a2l_file(self.ui.cfgLineEdit.text(),out_data)
+        print(out_data.prefix)
 
     def genButtonClicked(self):
         pass

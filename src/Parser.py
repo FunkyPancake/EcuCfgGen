@@ -1,7 +1,6 @@
 import os
 import re
-from src.VariableContainer import VariableContainer
-from lxml import etree
+from src.DataContainer import *
 
 
 class Parser:
@@ -20,7 +19,8 @@ class Parser:
 
     @staticmethod
     def eval_var_multi_line(sec_type, lines):
-        pass
+        p = lines[0].strip(";\n").split(" ")
+        return VariableContainer(sec_type, p[-1], p[-2])
 
     @staticmethod
     def parse_c_file(file_path):
@@ -67,3 +67,34 @@ class Parser:
                     entry.address = int(match.group('address'), 16)
                     entry.byte_size = int(match.group('byte_size'), 16)
         fd.close()
+
+    @staticmethod
+    def parse_a2l_file(file_path,out_data):
+        if not os.path.exists(file_path):
+            return
+        fd = open(file_path, "r")
+        prefix_open = True
+        buf =[]
+        buf_open = False
+        for line in fd.readlines():
+            if prefix_open and not ("MEASUREMENT" in line or "CHARACTERISTIC" in line):
+                out_data.prefix.append(line)
+            else:
+                prefix_open = False
+            if "MEASUREMENT" in line:
+                if "/begin" in line:
+                    buf = []
+                    buf_open = True
+                elif "/end" in line:
+                    buf_open = False
+                    out_data.measurement.append(Measurement(buf))
+            if "CHARACTERISTIC" in line:
+                if "/begin" in line:
+                    buf = []
+                    buf_open = True
+                elif "/end" in line:
+                    buf_open = False
+                    out_data.calibration.append(Characteristic(buf))
+            if buf_open:
+                buf.append(line)
+        return out_data

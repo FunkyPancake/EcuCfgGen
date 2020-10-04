@@ -1,0 +1,29 @@
+{{ data.prefix }}
+    {% for item in data.measurement %}
+        /begin MEASUREMENT
+            /* Name                  */   {{ data.name }}
+            /* Long identifier       */   {{ data.descruption }}
+            /* Data type             */   {{ data.data_type }}
+            /* Conversion method     */   {{ data.conversion }}
+            /* Resolution (Not used) */   {{ data.resolution }}
+            /* Accuracy (Not used)   */   {{ data.accuracy }}
+            /* Lower limit           */   {{ data.lower_limit }}
+            /* Upper limit           */   {{ data.upper_limit }}
+            ECU_ADDRESS {{ data.ecu_address }}
+        /end MEASUREMENT
+    {% endfor %}
+    {% for item in data.calibration %}
+        /begin CHARACTERISTIC
+            /* Name                  */   {{ data.name }}
+            /* Long Identifier       */   {{ data.descruption }}
+            /* Type                  */   VALUE
+            /* Memory Address        */   {{ data.ecu_address }}
+            /* Record Layout         */   {{ data.layout }}
+            /* Maximum Difference    */   0
+            /* Conversion method     */   {{ data.conversion }}
+            /* Lower Soft Limit      */   {{ data.lower_limit }}
+            /* Upper Soft Limit      */   {{ data.upper_limit }}
+        /end CHARACTERISTIC
+    {% endfor %}
+    /end MODULE
+/end PROJECT

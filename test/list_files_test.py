@@ -1,6 +1,6 @@
 import unittest
 from src.Parser import Parser
-from src.VariableContainer import VariableContainer
+from src.DataContainer import VariableContainer
 from lxml import etree
 
 
