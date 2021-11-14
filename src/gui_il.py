@@ -1,9 +1,8 @@
 from src.Parser import Parser
-from src.DataContainer import  A2LContainer
+from src.DataContainer import A2LContainer
 from src.ui import main_ui
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from PyQt5.QtCore import QSettings
-
 
 
 class Gui(QMainWindow):
@@ -25,23 +24,23 @@ class Gui(QMainWindow):
         self.ui.cfgLineEdit.setText(settings.value('CFG_PATH', [], str))
 
     def baseToolButtonClicked(self):
-        dname = str(QFileDialog.getExistingDirectory(self,"Select Directory"))
+        dname = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         if dname:
             self.ui.baseLineEdit.setText(dname)
 
     def cfgToolButtonClicked(self):
-        [fname,extension] = (QFileDialog.getOpenFileName(self, 'Open file', '', "A2L files (*.a2l)"))
+        [fname, extension] = (QFileDialog.getOpenFileName(self, 'Open file', '', "A2L files (*.a2l)"))
         if fname:
             self.ui.cfgLineEdit.setText(fname)
 
     def mapToolButtonClicked(self):
-        [fname,extension] = QFileDialog.getOpenFileName(self, 'Open file', '', "MAP files (*.map)")
+        [fname, extension] = QFileDialog.getOpenFileName(self, 'Open file', '', "MAP files (*.map)")
         if fname:
             self.ui.mapLineEdit.setText(fname)
 
     def updateButtonClicked(self):
         out_data = A2LContainer()
-        Parser.parse_a2l_file(self.ui.cfgLineEdit.text(),out_data)
+        Parser.parse_a2l_file(self.ui.cfgLineEdit.text(), out_data)
         print(out_data.prefix)
 
     def genButtonClicked(self):

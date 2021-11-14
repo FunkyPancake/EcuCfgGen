@@ -33,7 +33,7 @@ class Parser:
                 section = []
                 continue
             if "STOP_SEC_VAR" in line:
-                Parser.exal_section(section,"CAL" in line)
+                Parser.exal_section(section, "CAL" in line)
                 continue
             if "#include" in line:
                 continue
@@ -44,16 +44,16 @@ class Parser:
     @staticmethod
     def parse_all_c_files(base_path):
         all_variables = []
-        for file_path in Parser.list_files(base_path,'.c'):
+        for file_path in Parser.list_files(base_path, '.c'):
             all_variables += Parser.parse_c_file(file_path)
         return all_variables
 
     @staticmethod
-    def extract_section(lines,is_cal):
+    def extract_section(lines, is_cal):
         pass
 
     @staticmethod
-    def parse_map_file( file_path, cfg_to_update):
+    def parse_map_file(file_path, cfg_to_update):
         if not os.path.exists(file_path):
             return
         pattern = "  ([0-9A-Fa-f]+) (?P<byte_size>[0-9A-Fa-f]+) (?P<address>[0-9A-Fa-f]+) ([0-9A-Fa-f]+)  (\d) (?P<name>\w+)"
@@ -69,12 +69,12 @@ class Parser:
         fd.close()
 
     @staticmethod
-    def parse_a2l_file(file_path,out_data):
+    def parse_a2l_file(file_path, out_data):
         if not os.path.exists(file_path):
             return
         fd = open(file_path, "r")
         prefix_open = True
-        buf =[]
+        buf = []
         buf_open = False
         for line in fd.readlines():
             if prefix_open and not ("MEASUREMENT" in line or "CHARACTERISTIC" in line):
